@@ -1,0 +1,107 @@
+<!DOCTYPE html><html lang="ar" dir="rtl"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"><title>متاهة الأطراف الذكية</title><style>
+:root{--bg:#f4f7f9;--fg:#1f2d3a;--card:#fff;--wall:#34505f;--path:#e8f1f5;--acc:#c0392b;--ok:#2e8b57;--bd:#cfdbe2;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media(prefers-color-scheme:dark){:root:not([data-theme=light]){--bg:#14202a;--fg:#e8eef2;--card:#1d2e3b;--wall:#0b141b;--path:#2a4152;--bd:#3a5568}}
+:root[data-theme=dark]{--bg:#14202a;--fg:#e8eef2;--card:#1d2e3b;--wall:#0b141b;--path:#2a4152;--bd:#3a5568}
+*{box-sizing:border-box}html,body{margin:0}body{background:var(--bg);color:var(--fg);font-family:Tahoma,"Segoe UI",Arial,sans-serif;min-height:100%;text-align:center;padding:12px}
+h1{font-size:1.35rem;margin:.6rem 0}.sub{opacity:.75;margin-bottom:1rem}
+button{font:inherit;cursor:pointer;border:0;border-radius:12px;background:var(--acc);color:#fff;padding:.8rem 1.2rem;margin:.3rem}
+.big{display:block;width:min(92vw,420px);margin:.7rem auto;font-size:1.1rem;padding:1.1rem}.big small{display:block;opacity:.85;font-size:.8rem;margin-top:.3rem}
+.alt{background:#4a6b7c}
+input{font:inherit;padding:.7rem;border-radius:10px;border:2px solid var(--bd);width:min(92vw,420px);background:var(--card);color:var(--fg);text-align:center}
+#top{display:flex;justify-content:space-between;align-items:center;max-width:500px;margin:0 auto .5rem}
+#grid{touch-action:none;cursor:crosshair;user-select:none;width:min(94vw,560px);margin:0 auto;direction:ltr;border:3px solid #1b2333;border-radius:14px;overflow:hidden;background:#faf8f3}
+#pl{transition:transform .1s linear}
+.c{aspect-ratio:1;display:flex;align-items:center;justify-content:center}.w{background:var(--wall)}.p{background:var(--path)}
+#pad{display:grid;grid-template-columns:repeat(3,64px);gap:6px;justify-content:center;margin:.8rem auto;direction:ltr}#pad button{padding:.7rem 0;margin:0;background:#4a6b7c;font-size:1.3rem}
+#ov{position:fixed;inset:0;background:rgba(0,0,0,.6);display:none;align-items:center;justify-content:center;padding:14px}
+#box{background:var(--card);border-radius:16px;padding:18px;width:min(94vw,460px);max-height:92%;overflow:auto}
+.o{display:block;width:100%;background:var(--card);color:var(--fg);border:2px solid var(--bd);margin:.4rem 0;text-align:right}.good{background:var(--ok);color:#fff;border-color:var(--ok)}.bad{background:var(--acc);color:#fff;border-color:var(--acc)}
+</style></head><body>
+<div id="menu"><h1>🦿 متاهة الأطراف الاصطناعية الذكية</h1><div class="sub">الذكاء الاصطناعي في الأطراف الاصطناعية — المحاضرة الثانية</div>
+<div><input id="nm" placeholder="اكتب اسمك الكامل" maxlength="60"></div><button class="big" onclick="start(1)">القسم الأول<small>لماذا نحتاج الأطراف الذكية + لمحة عن تطور الذكاء الاصطناعي فيها</small></button>
+<button class="big alt" onclick="start(2)">القسم الثاني<small>مفاهيم أساسية في الذكاء الاصطناعي</small></button>
+<div class="sub">اوصل إلى 🏁 عبر المتاهة. عند مواجهة وحش 👾 يظهر سؤال: الإجابة الصحيحة تهزمه، والخاطئة تكلفك قلباً. لديك 3 قلوب.</div></div>
+<div id="game" style="display:none"><div id="top"><button class="alt" onclick="menu()">رجوع</button><b id="hud"></b></div><div id="grid"></div>
+<div class="sub" style="margin-top:.8rem">حرّك مؤشر الماوس داخل المتاهة (أو المس واسحب بإصبعك) ليتبعك الطرف 🦿 عبر الممرات</div></div>
+<div id="ov"><div id="box"></div></div>
+<script>
+// ضع هنا رابط تطبيق الويب من Google Apps Script (ينتهي بـ /exec)
+const SHEET_URL="https://script.google.com/macros/s/AKfycbwtMmH_9VJ4-pNIooToYIJo_iXZeD1irSFajVzceridfoRb-0cWeeG4SLiPuWNuHwwZuQ/exec";
+const B={1:[
+["ما التسلسل الصحيح لتطور الأطراف الاصطناعية نحو الطرف الذكي؟","ميكانيكي ثم تعمل قوة الجسم ثم عضلي كهربائي ثم معالج دقيق ثم ذكي","ذكي ثم معالج دقيق ثم عضلي كهربائي ثم ميكانيكي","ميكانيكي ثم معالج دقيق ثم قوة الجسم ثم ذكي","قوة الجسم ثم ميكانيكي ثم ذكي ثم عضلي كهربائي"],
+["لماذا لا تكفي القواعد الثابتة If/Else للتحكم بالطرف؟","لأن حركة الإنسان معقدة ومتغيرة من شخص لآخر ومن لحظة لأخرى","لأنها بطيئة جداً","لأن الطرف لا يملك معالجاً","لأنها تحتاج بيانات مصنفة"],
+["ما ميزة الذكاء الاصطناعي في التحكم؟","يتعلم الأنماط بدل أن تبرمج له كل حالة يدوياً","يلغي الحاجة إلى الحساسات","يعتمد على قواعد ثابتة فقط","يضمن أداءً أفضل لكل مريض تلقائياً"],
+["أي خوارزمية ذكية تقابل التحكم التقليدي PID في جدول المقارنة؟","Fuzzy Logic","LSTM","Adaptive Filters","Reinforcement Learning"],
+["أي تقنية تُستخدم للتنبؤ بالحركة، وهو غير موجود في الطرق التقليدية؟","LSTM","Threshold","PID","Filters"],
+["أي أسلوب يحسّن الأداء بدل الأداء الثابت في الطرف التقليدي؟","Reinforcement Learning","Threshold","استخراج الخصائص يدوياً","Filters"],
+["ما أول طرف ذكي طورته شركة Blatchford عام 1993؟","ركبة اصطناعية","كاحل اصطناعي","يد بيونيك","مرفق اصطناعي"],
+["أي طرف ارتبطت نماذجه الأولية بالمخترع Kelly James (Ottobock)؟","C-Leg","iWalk BiOM","Raize","Proprio Foot"],
+["على ماذا تعتمد الأطراف السفلية الذكية مثل iWalk BiOM وProprio Foot؟","قواعد منطقية وآلات حالات منتهية وتحكم بالممانعة وتكيفي، دون تدريب نموذج تعلم آلي","شبكات عصبية عميقة مدربة على بيانات المريض","التعلم المعزز فقط","نماذج لغوية كبيرة"],
+["متى أُطلقت أول يد بيونيك تجارية بأصابع مستقلة (i-limb ultra) من Touch Bionics؟","2007","1993","2011","2022"],
+["أي نظامين مثّلا بدء الاستخدام التجاري للتعرف على الأنماط العضلية؟","Coapt Complete Control وOttobock Myo Plus","iWalk BiOM وRaize","Triton وMeridium","Elan وProprio Foot"],
+["ماذا أضافت أنظمة التعرف على الأنماط العضلية للخوارزمية؟","استخراج خصائص EMG وتدريب مصنف والتعرف اللحظي على نية المستخدم","التحكم بزر واحد","الاعتماد على قوة الجسم","حذف الحساسات"],
+["ما الذي تتأثر به قدرة الأطراف التقليدية على التعامل مع الحركة؟","التعب العضلي وسرعة الحركة وتغير الإشارات العضلية واختلاف الأنشطة","لون الطرف","وزن الغطاء التجميلي","اسم الشركة"],
+["هل يضمن الذكاء الاصطناعي أداءً أفضل لكل مريض تلقائياً؟","لا، فالأداء يتأثر بجودة الإشارات والتدريب واختلاف المستخدمين","نعم دائماً","فقط في الأطراف العلوية","فقط بعد سنة من الاستخدام"]
+],2:[
+["لماذا يُعد MYCIN ذكاءً اصطناعياً وليس تعلماً آلياً؟","لأنه قائم على قواعد رمزية كتبها الخبراء يدوياً ولم يتعلم من البيانات","لأنه شبكة عصبية عميقة","لأنه يتعلم بالمكافأة","لأنه نموذج لغوي"],
+["ما الفرق بين البرمجة التقليدية وتعلم الآلة؟","التقليدية: بيانات + برنامج ← خرج. تعلم الآلة: بيانات + خرج ← برنامج (نموذج)","لا فرق بينهما","في تعلم الآلة يكتب المبرمج القواعد","في التقليدية يستنتج الحاسوب البرنامج"],
+["ما السمات (Features) في الأطراف الذكية؟","المدخلات مثل إشارات EMG وزاوية الركبة وقوة رد فعل الأرض","نوع الحركة المقصودة","مكافأة الوكيل","اسم الطرف"],
+["ما التسمية (Label) عند تدريب نموذج للتعرف على نية الحركة؟","الحركة الصحيحة التي نفذها المستخدم أثناء تسجيل الإشارة","قيمة إشارة EMG","سرعة المفصل","عدد الحساسات"],
+["ما الفرق بين التصنيف والانحدار؟","التصنيف يتنبأ بفئات محددة والانحدار بقيم مستمرة","التصنيف بقيم مستمرة والانحدار بفئات","كلاهما بلا تسميات","كلاهما تجميع"],
+["أي أسلوب تعلم يعتمد على بيانات مصنفة بالكامل؟","التعلم الخاضع للإشراف","التعلم غير الخاضع للإشراف","التعلم المعزز","التجميع"],
+["ما المرحلة التي تقسّم الإشارة إلى نوافذ زمنية في التعرف على حركة اليد؟","تجزئة البيانات","التصنيف","المعالجة اللاحقة","اقتباس الإشارة"],
+["ما هدف المعالجة اللاحقة مثل التصويت بالأغلبية؟","تقليل أخطاء التصنيف","إزالة الضوضاء","اقتباس الإشارة","تدريب النموذج"],
+["ما المهمة الأشهر في التعلم غير الخاضع للإشراف؟","التجميع Clustering","التصنيف بتسميات","الانحدار","المكافأة والعقاب"],
+["متى يُستخدم التعلم شبه الخاضع للإشراف؟","عند توفر قدر صغير من البيانات المصنفة وكمية كبيرة غير مصنفة","عند عدم وجود أي بيانات","عند تصنيف كل البيانات","عند التعلم بالمكافأة فقط"],
+["في التعلم المعزز، ماذا يتلقى الوكيل لتقييم تصرفه؟","مكافأة (Reward)","تسمية صحيحة","عنقوداً","نافذة زمنية"],
+["ما السياسة π في التعلم المعزز؟","دالة من فضاء الحالات إلى فضاء الإجراءات تحدد سلوك الوكيل","مجموعة بيانات التدريب","إشارة المكافأة","البيئة نفسها"],
+["أي خوارزميات تعلم معزز ذُكرت لتحسين جرعة العلاج؟","Q-learning وPPO","K-Means","SVM","PCA"],
+["ما معنى الهلوسة في نماذج اللغة الكبيرة؟","توليد معلومات مقنعة لغوياً لكنها غير صحيحة أو غير موجودة في المصدر","بطء الاستجابة","فقدان الاتصال","ضغط البيانات"]
+]};
+const R=9,C=11,S=50,$=id=>document.getElementById(id),D=[[0,1],[0,-1],[1,0],[-1,0]];
+let mode,Wr,Wd,pos,mons,lives,qs,left,over,busy,name,correct=0,wrong=0,t0=0,tgt=null;
+const sh=a=>{a=a.slice();for(let i=a.length-1;i>0;i--){const j=Math.random()*(i+1)|0;[a[i],a[j]]=[a[j],a[i]]}return a};
+function maze(){Wr=Array.from({length:R},()=>Array(C).fill(true));Wd=Array.from({length:R},()=>Array(C).fill(true));
+const vis=Array.from({length:R},()=>Array(C).fill(false)),st=[[0,0]];vis[0][0]=true;
+while(st.length){const[y,x]=st[st.length-1];const nb=sh(D).filter(([a,b])=>{const r=y+a,c=x+b;return r>=0&&c>=0&&r<R&&c<C&&!vis[r][c]});
+if(!nb.length){st.pop();continue}const[a,b]=nb[0],r=y+a,c=x+b;
+if(b==1)Wr[y][x]=false;else if(b==-1)Wr[r][c]=false;else if(a==1)Wd[y][x]=false;else Wd[r][c]=false;
+vis[r][c]=true;st.push([r,c])}}
+function can(y,x,a,b){if(b==1)return x+1<C&&!Wr[y][x];if(b==-1)return x>0&&!Wr[y][x-1];if(a==1)return y+1<R&&!Wd[y][x];return y>0&&!Wd[y-1][x]}
+function bfs(f,t){const s=f[0]+","+f[1],pr={[s]:null},q=[f];
+while(q.length){const[y,x]=q.shift();if(y==t[0]&&x==t[1])break;for(const[a,b]of D){if(!can(y,x,a,b))continue;const k=(y+a)+","+(x+b);if(!(k in pr)){pr[k]=y+","+x;q.push([y+a,x+b])}}}
+let k=t[0]+","+t[1];if(!(k in pr))return null;const p=[];while(k){p.unshift(k);k=pr[k]}return p}
+function spiky(cx,cy,ro,ri,n,rot){const p=[];for(let i=0;i<n*2;i++){const r=i%2?ri:ro,a=Math.PI*i/n+rot;p.push((cx+r*Math.sin(a)).toFixed(1)+","+(cy-r*Math.cos(a)).toFixed(1))}return p.join(" ")}
+function build(){let w="";
+for(let y=0;y<R;y++)for(let x=0;x<C;x++){if(Wr[y][x]&&x<C-1)w+=`<line x1="${(x+1)*S}" y1="${y*S}" x2="${(x+1)*S}" y2="${(y+1)*S}"/>`;if(Wd[y][x]&&y<R-1)w+=`<line x1="${x*S}" y1="${(y+1)*S}" x2="${(x+1)*S}" y2="${(y+1)*S}"/>`}
+let m="";mons.forEach(k=>{const[y,x]=k.split(",").map(Number),cx=x*S+S/2,cy=y*S+S/2;
+m+=`<g class="mo" data-k="${k}"><polygon points="${spiky(cx,cy,23,15,10,0.3)}" fill="#e8730c" stroke="#9c4a00" stroke-width="2.5" stroke-linejoin="round"/><circle cx="${cx-6}" cy="${cy-3}" r="4" fill="#fff"/><circle cx="${cx+6}" cy="${cy-3}" r="4" fill="#fff"/><circle cx="${cx-6}" cy="${cy-3}" r="1.8" fill="#222"/><circle cx="${cx+6}" cy="${cy-3}" r="1.8" fill="#222"/><path d="M${cx-10} ${cy-9}L${cx-3} ${cy-6}M${cx+10} ${cy-9}L${cx+3} ${cy-6}" stroke="#7a3600" stroke-width="2" stroke-linecap="round"/><path d="M${cx-7} ${cy+8}l3.5 3l3.5-3l3.5 3l3.5-3" fill="none" stroke="#7a3600" stroke-width="1.8" stroke-linejoin="round"/></g>`});
+const gx=(C-1)*S+S/2,gy=(R-1)*S+S/2;
+$("grid").innerHTML=`<svg viewBox="0 0 ${C*S} ${R*S}" style="display:block;width:100%;height:auto"><rect width="${C*S}" height="${R*S}" fill="#faf8f3"/><g stroke="#1b2333" stroke-width="3" stroke-linecap="round">${w}</g><polygon points="${spiky(gx,gy,18,7.5,5,0)}" fill="#dfe6f3" stroke="#c3cee4" stroke-width="2" stroke-linejoin="round"/>${m}<g id="pl" style="transform:translate(${pos[1]*S+S/2}px,${pos[0]*S+S/2}px)"><circle r="15" fill="#2e7d32" stroke="#1b5e20" stroke-width="2.5"/><circle cx="-4.5" cy="-2" r="4" fill="#fff"/><circle cx="4.5" cy="-2" r="4" fill="#fff"/><circle cx="-4.5" cy="-2" r="1.7" fill="#111"/><circle cx="4.5" cy="-2" r="1.7" fill="#111"/></g></svg>`}
+function start(m){name=$("nm").value.trim();if(!name){alert("اكتب اسمك أولاً");return}tgt=null;correct=wrong=0;t0=Date.now();mode=m;
+maze();pos=[0,0];lives=3;over=false;busy=false;qs=sh(B[m]);
+const p=bfs([0,0],[R-1,C-1]),L=p.length;mons=new Set();for(let i=1;i<=5;i++)mons.add(p[Math.floor(L*i/6)]);left=5;
+$("menu").style.display="none";$("game").style.display="block";build();draw()}
+function menu(){$("game").style.display="none";$("menu").style.display="block";$("ov").style.display="none"}
+function draw(){$("pl").style.transform=`translate(${pos[1]*S+S/2}px,${pos[0]*S+S/2}px)`;
+document.querySelectorAll("#grid .mo").forEach(e=>{if(!mons.has(e.dataset.k))e.remove()});
+$("hud").textContent="❤️".repeat(lives)+"🖤".repeat(3-lives)+"   👾 "+left}
+function mv(a,b){if(over||busy||!can(pos[0],pos[1],a,b))return;const y=pos[0]+a,x=pos[1]+b;
+if(mons.has(y+","+x)){ask(y,x);return}pos=[y,x];draw();if(y==R-1&&x==C-1)end(true)}
+function ask(y,x){busy=true;if(!qs.length)qs=sh(B[mode]);const q=qs.pop(),o=sh(q.slice(1));
+$("box").innerHTML=`<div style="font-size:2rem">👾</div><p><b>${q[0]}</b></p>`+o.map((t,i)=>`<button class="o" data-i="${i}">${t}</button>`).join("");
+$("ov").style.display="flex";$("box").querySelectorAll(".o").forEach(b=>b.onclick=()=>{
+const ok=o[b.dataset.i]==q[1];$("box").querySelectorAll(".o").forEach(e=>{e.disabled=true;if(o[e.dataset.i]==q[1])e.className="o good"});
+if(!ok)b.className="o bad";
+if(ok){mons.delete(y+","+x);left--;pos=[y,x];correct++}else{lives--;wrong++}
+$("box").insertAdjacentHTML("beforeend",`<p>${ok?"أحسنت! هُزم الوحش 🎉":"إجابة خاطئة، خسرت قلباً 💔"}</p><button id="nx">متابعة</button>`);
+$("nx").onclick=()=>{$("ov").style.display="none";busy=false;draw();if(lives<=0)end(false)}})}
+function send(w){if(!SHEET_URL)return;const d={name,section:mode==1?"القسم الأول":"القسم الثاني",result:w?"فاز":"خسر",correct,wrong,lives,seconds:Math.round((Date.now()-t0)/1000)};fetch(SHEET_URL,{method:"POST",mode:"no-cors",headers:{"Content-Type":"text/plain"},body:JSON.stringify(d)}).catch(()=>{})}
+function end(w){over=true;send(w);$("box").innerHTML=`<div style="font-size:2.5rem">${w?"🏆":"💀"}</div><h2>${w?"وصلت إلى المخرج!":"انتهت القلوب"}</h2><p>${w?"أنهيت المتاهة وبقي لك "+lives+" من 3 قلوب.":"الوحوش المتبقية: "+left}</p><button onclick="$('ov').style.display='none';start(mode)">لعب مجدداً (أسئلة ومتاهة جديدة)</button><button class="alt" onclick="menu()">القائمة</button>`;$("ov").style.display="flex"}
+function cellAt(e){const r=$("grid").getBoundingClientRect(),x=Math.floor((e.clientX-r.left)/r.width*C),y=Math.floor((e.clientY-r.top)/r.height*R);return x<0||y<0||x>=C||y>=R?null:[y,x]}
+function step(){if(over||busy||!tgt)return;const p=bfs(pos,tgt);if(!p||p.length<2){tgt=null;return}
+const n=p[1].split(",").map(Number);mv(n[0]-pos[0],n[1]-pos[1]);if(busy)tgt=null}
+setInterval(step,110);
+["pointermove","pointerdown"].forEach(ev=>$("grid").addEventListener(ev,e=>{e.preventDefault();tgt=cellAt(e)}));
+addEventListener("keydown",e=>{const k={ArrowUp:[-1,0],w:[-1,0],ArrowDown:[1,0],s:[1,0],ArrowLeft:[0,-1],a:[0,-1],ArrowRight:[0,1],d:[0,1]}[e.key];if(k&&$("game").style.display=="block"){e.preventDefault();mv(...k)}});
+</script></body></html>
